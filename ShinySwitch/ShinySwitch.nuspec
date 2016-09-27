@@ -1,14 +1,14 @@
 <?xml version="1.0"?>
 <package >
   <metadata>
-    <id>$id$</id>
+    <id>ShinySwitch</id>
     <version>$version$</version>
-    <title>$title$</title>
-    <authors>$author$</authors>
-    <owners>$author$</owners>
+    <title>ShinySwitch</title>
+    <authors>Asger Hallas, Mads Frandsen</authors>
+    <owners>Asger Hallas</owners>
     <projectUrl>http://github.com/asgerhallas/ShinySwitch</projectUrl>
     <requireLicenseAcceptance>false</requireLicenseAcceptance>
-    <description>$description$</description>
+    <description>Switch on types and predicate functions</description>
     <copyright>Copyright 2016</copyright>
   </metadata>
 </package>
