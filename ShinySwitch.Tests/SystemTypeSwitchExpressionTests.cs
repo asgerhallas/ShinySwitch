@@ -8,7 +8,7 @@ namespace ShinySwitch.Tests
         [Fact]
         public void MatchPassesSubject()
         {
-            Switch.On<string>(typeof(B))
+            Switch<string>.On(typeof(B))
                 .Match<A>(x =>
                 {
                     Assert.Equal(typeof(B), x);
@@ -27,7 +27,7 @@ namespace ShinySwitch.Tests
         public void MatchOnType()
         {
             Assert.Equal("B",
-                Switch.On<string>(typeof(B))
+                Switch<string>.On(typeof(B))
                     .Match<A>(x => "A")
                     .Match<B>(x => "B")
                     .Match<C>(x => "C")
@@ -38,7 +38,7 @@ namespace ShinySwitch.Tests
         public void MatchOnTypeAndPredicate()
         {
             Assert.Equal("B",
-                Switch.On<string>(typeof(B))
+                Switch<string>.On(typeof(B))
                     .Match<A>(x => false, x => "A")
                     .Match<B>(x => "B")
                     .Match<C>(x => "C")
@@ -49,7 +49,7 @@ namespace ShinySwitch.Tests
         public void MatchOnTypeAndConstantPredicate()
         {
             Assert.Equal("B",
-                Switch.On<string>(typeof(B))
+                Switch<string>.On(typeof(B))
                     .Match<A>(false, x => "A")
                     .Match<B>(x => "B")
                     .Match<C>(x => "C")
@@ -60,7 +60,7 @@ namespace ShinySwitch.Tests
         public void IfMatchThen()
         {
             Assert.Equal("Bthen", 
-                Switch.On<string>(typeof(B))
+                Switch<string>.On(typeof(B))
                     .Match<B>(x => "B")
                     .Then((result, x) => result+"then")
                     .OrThrow());
@@ -70,7 +70,7 @@ namespace ShinySwitch.Tests
         public void IfNoMatchNoThen()
         {
             Assert.Equal("",
-                Switch.On<string>(typeof(B))
+                Switch<string>.On(typeof(B))
                     .Match<C>(x => "C")
                     .Then((result, x) => result + "then")
                     .Else(""));
@@ -80,7 +80,7 @@ namespace ShinySwitch.Tests
         public void IfNoMatchThenElse()
         {
             Assert.Equal("else",
-                Switch.On<string>(typeof(object))
+                Switch<string>.On(typeof(object))
                     .Match<A>(x => "A")
                     .Else(() => "else"));
         }
@@ -89,7 +89,7 @@ namespace ShinySwitch.Tests
         public void IfMatchThenNoElse()
         {
             Assert.Equal("A",
-                Switch.On<string>(typeof(A))
+                Switch<string>.On(typeof(A))
                     .Match<A>(x => "A")
                     .Else(() => "else"));
         }
@@ -99,7 +99,7 @@ namespace ShinySwitch.Tests
         public void IfNoMatchThenThrow()
         {
             Assert.Throws<Exception>(() =>
-                Switch.On<string>(typeof(object))
+                Switch<string>.On(typeof(object))
                     .Match<A>(x => "A")
                     .OrThrow(new Exception("ohno")));
         }
@@ -108,7 +108,7 @@ namespace ShinySwitch.Tests
         public void IfMatchThenNoThrow()
         {
             var exception = Record.Exception(() =>
-                Switch.On<string>(typeof(A))
+                Switch<string>.On(typeof(A))
                     .Match<A>(x => "A")
                     .OrThrow(new Exception("ohno")));
 

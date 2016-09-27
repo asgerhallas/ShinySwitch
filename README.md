@@ -18,9 +18,9 @@ Switch.On(@event) // matching on type of instance
 Or if you'd like to return a value, like this:
 
 ```C#
-var result = Switch.On(@event) // matching on type of instance
+var result = Switch<string>.On(@event) // matching on type of instance
     .Match<RegistrationChanged>(registrationChanged =>
-        Switch.On(registrationChanged.TargetType) // matching on System.Type
+        Switch<string>.On(registrationChanged.TargetType) // matching on System.Type
             .Match<Zone>(type => type.Name + " was great!")
             .Match<Boiler>(type => "Oh the boiler")
     .Match<StatusRegistered>(x => "Registration of status")
