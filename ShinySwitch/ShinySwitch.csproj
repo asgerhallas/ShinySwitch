@@ -41,7 +41,15 @@
   </ItemGroup>
   <ItemGroup>
     <Compile Include="Properties\AssemblyInfo.cs" />
+    <Compile Include="Switch.cs" />
     <Compile Include="SwitchExpression.cs" />
+    <Compile Include="SwitchResult.cs" />
+    <Compile Include="SwitchStatement.cs" />
+    <Compile Include="SystemTypeSwitchExpression.cs" />
+    <Compile Include="SystemTypeSwitchStatement.cs" />
+  </ItemGroup>
+  <ItemGroup>
+    <None Include="ShinySwitch.nuspec" />
   </ItemGroup>
   <Import Project="$(MSBuildToolsPath)\Microsoft.CSharp.targets" />
   <!-- To modify your build process, add your task inside one of the targets below and uncomment it. 

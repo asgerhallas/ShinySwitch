@@ -2,31 +2,31 @@
 
 namespace ShinySwitch
 {
-    public class SwitchExpression<TReturn>
+    public class SystemTypeSwitchExpression<TReturn>
     {
-        readonly object subject;
+        readonly Type subject;
         readonly SwitchResult<TReturn> result;
 
-        internal SwitchExpression(object subject, SwitchResult<TReturn> result)
+        internal SystemTypeSwitchExpression(Type subject, SwitchResult<TReturn> result)
         {
             this.subject = subject;
             this.result = result;
         }
 
-        public SwitchExpression<TReturn> Match<T>(Func<T, TReturn> func) => Match(x => true, func);
-        public SwitchExpression<TReturn> Match<T>(bool predicate, Func<T, TReturn> func) => Match(x => predicate, func);
+        public SystemTypeSwitchExpression<TReturn> Match<T>(Func<Type, TReturn> func) => Match<T>(x => true, func);
+        public SystemTypeSwitchExpression<TReturn> Match<T>(bool predicate, Func<Type, TReturn> func) => Match<T>(x => predicate, func);
 
-        public SwitchExpression<TReturn> Match<T>(Func<T, bool> predicate, Func<T, TReturn> func)
+        public SystemTypeSwitchExpression<TReturn> Match<T>(Func<Type, bool> predicate, Func<Type, TReturn> func)
         {
-            return subject is T && predicate((T) subject)
-                ? new SwitchExpression<TReturn>(subject, new SwitchResult<TReturn>(func((T) subject)))
+            return typeof(T).IsAssignableFrom(subject) && predicate(subject)
+                ? new SystemTypeSwitchExpression<TReturn>(subject, new SwitchResult<TReturn>(func(subject)))
                 : this;
         }
 
-        public SwitchExpression<TReturn> Then(Func<TReturn, object, TReturn> func)
+        public SystemTypeSwitchExpression<TReturn> Then(Func<TReturn, object, TReturn> func)
         {
             return result.HasResult 
-                ? new SwitchExpression<TReturn>(subject, new SwitchResult<TReturn>(func(result.Result, subject))) 
+                ? new SystemTypeSwitchExpression<TReturn>(subject, new SwitchResult<TReturn>(func(result.Result, subject))) 
                 : this;
         }
 
