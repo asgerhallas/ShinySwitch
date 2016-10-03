@@ -3,7 +3,7 @@ using Xunit;
 
 namespace ShinySwitch.Tests
 {
-    public class SwitchExpressionTests
+    public class SwitchExpressionMatchTypeTests
     {
         [Fact]
         public void MatchPassesSubject()

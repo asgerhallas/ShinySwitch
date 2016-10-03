@@ -2,31 +2,39 @@
 
 namespace ShinySwitch
 {
-    public class SwitchExpression<TReturn>
+    public class SwitchExpression<TSubject, TReturn>
     {
-        readonly object subject;
+        readonly TSubject subject;
         readonly SwitchResult<TReturn> result;
 
-        internal SwitchExpression(object subject, SwitchResult<TReturn> result)
+        internal SwitchExpression(TSubject subject, SwitchResult<TReturn> result)
         {
             this.subject = subject;
             this.result = result;
         }
 
-        public SwitchExpression<TReturn> Match<T>(Func<T, TReturn> func) => Match(x => true, func);
-        public SwitchExpression<TReturn> Match<T>(bool predicate, Func<T, TReturn> func) => Match(x => predicate, func);
-
-        public SwitchExpression<TReturn> Match<T>(Func<T, bool> predicate, Func<T, TReturn> func)
+        public SwitchExpression<TSubject, TReturn> Match<T>(Func<T, TReturn> func) => Match(x => true, func);
+        public SwitchExpression<TSubject, TReturn> Match<T>(bool predicate, Func<T, TReturn> func) => Match(x => predicate, func);
+        public SwitchExpression<TSubject, TReturn> Match<T>(Func<T, bool> predicate, Func<T, TReturn> func)
         {
-            return subject is T && predicate((T) subject)
-                ? new SwitchExpression<TReturn>(subject, new SwitchResult<TReturn>(func((T) subject)))
+            return subject is T && predicate((T)(object)subject)
+                ? new SwitchExpression<TSubject, TReturn>(subject, new SwitchResult<TReturn>(func((T)(object)subject)))
                 : this;
         }
 
-        public SwitchExpression<TReturn> Then(Func<TReturn, object, TReturn> func)
+        public SwitchExpression<TSubject, TReturn> Match(TSubject value, Func<TSubject, TReturn> func) => Match(value, x => true, func);
+        public SwitchExpression<TSubject, TReturn> Match(TSubject value, bool predicate, Func<TSubject, TReturn> func) => Match(value, x => predicate, func);
+        public SwitchExpression<TSubject, TReturn> Match(TSubject value, Func<TSubject, bool> predicate, Func<TSubject, TReturn> func)
+        {
+            return Equals(subject, value) && predicate(subject)
+                ? new SwitchExpression<TSubject, TReturn>(subject, new SwitchResult<TReturn>(func(subject)))
+                : this;
+        }
+
+        public SwitchExpression<TSubject, TReturn> Then(Func<TReturn, object, TReturn> func)
         {
             return result.HasResult 
-                ? new SwitchExpression<TReturn>(subject, new SwitchResult<TReturn>(func(result.Result, subject))) 
+                ? new SwitchExpression<TSubject, TReturn>(subject, new SwitchResult<TReturn>(func(result.Result, subject))) 
                 : this;
         }
 

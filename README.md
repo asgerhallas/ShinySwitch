@@ -1,8 +1,8 @@
 # ShinySwitch
 
-You want to switch on type of an object instance or on assignability to an instance of System.Type?
+You want to switch on type or value of an object? Or on assignability to an instance of System.Type?
 
-If you want to mutate some state, you can do it like this:
+If you want to mutate some state or react to something, you can do it like this:
 
 ```C#
 Switch.On(@event) // matching on type of instance
@@ -25,6 +25,15 @@ var result = Switch<string>.On(@event) // matching on type of instance
             .Match<Boiler>(type => "Oh the boiler")
     .Match<StatusRegistered>(x => "Registration of status")
     .Match<ZoneUsagesConverted>(x => "Did I just do that?")
+	.OrThrow();
+```
+
+Or match on value:
+
+```C#
+var result = Switch<string>.On(theEnum)
+    .Match(TheEnum.A, x => "It's A")
+    .Match(TheEnum.B, x => "Or B!")
 	.OrThrow();
 ```
 

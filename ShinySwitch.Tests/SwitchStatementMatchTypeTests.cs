@@ -3,11 +3,11 @@ using Xunit;
 
 namespace ShinySwitch.Tests
 {
-    public class SwitchStatementTests
+    public class SwitchStatementMatchTypeTests
     {
         string result;
 
-        public SwitchStatementTests()
+        public SwitchStatementMatchTypeTests()
         {
             result = "";
         }
