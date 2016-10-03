@@ -117,6 +117,22 @@ namespace ShinySwitch.Tests
             Assert.Equal(null, exception);
         }
 
+        [Fact]
+        public void IfNoMatchThenThrowOnImplicitReturn()
+        {
+            Assert.Throws<Exception>(() =>
+                Switch<string>.On(new object())
+                    .Match<A>(x => "A"));
+        }
+
+        [Fact]
+        public void IfMatchThenNoThrowOnImplicitReturn()
+        {
+            Assert.Equal("A",
+                Switch<string>.On(new A())
+                    .Match<A>(x => "A"));
+        }
+
 
         public class A { }
         public class B : A { }
