@@ -31,6 +31,15 @@ namespace ShinySwitch
                 : this;
         }
 
+        public SwitchExpression<TSubject, TReturn> Match(TSubject value, TReturn returnValue) => Match(value, x => true, returnValue);
+        public SwitchExpression<TSubject, TReturn> Match(TSubject value, bool predicate, TReturn returnValue) => Match(value, x => predicate, returnValue);
+        public SwitchExpression<TSubject, TReturn> Match(TSubject value, Func<TSubject, bool> predicate, TReturn returnValue)
+        {
+            return Equals(subject, value) && predicate(subject)
+                ? new SwitchExpression<TSubject, TReturn>(subject, new SwitchResult<TReturn>(returnValue))
+                : this;
+        }
+
         public SwitchExpression<TSubject, TReturn> Then(Func<TReturn, object, TReturn> func)
         {
             return result.HasResult 

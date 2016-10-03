@@ -17,6 +17,17 @@ namespace ShinySwitch.Tests
         }
 
         [Fact]
+        public void MatchOnValueReturnConstant()
+        {
+            Assert.Equal("B",
+                Switch<string>.On(TheEnum.B)
+                    .Match(TheEnum.A, "A")
+                    .Match(TheEnum.B, "B")
+                    .Match(TheEnum.C, "C")
+                    .OrThrow());
+        }
+
+        [Fact]
         public void MatchOnValueAndPredicate()
         {
             Assert.Equal("B",
