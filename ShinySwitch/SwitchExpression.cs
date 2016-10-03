@@ -80,5 +80,10 @@ namespace ShinySwitch
 
             return default(TReturn);
         }
+
+        public static implicit operator TReturn(SwitchExpression<TSubject, TReturn> expression)
+        {
+            return expression.OrThrow();
+        }
     }
 }
