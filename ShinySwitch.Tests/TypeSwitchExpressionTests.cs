@@ -3,8 +3,60 @@ using Xunit;
 
 namespace ShinySwitch.Tests
 {
-    public class SwitchExpressionMatchValueTests
+    public class TypeSwitchExpression2Tests
     {
+        //[Fact]
+        //public void FactMethodName()
+        //{
+        //    Switch<string>.On(new B(), TheEnum.C)
+        //        .Match<B>()
+        //}
+    }
+
+    public class TypeSwitchExpressionTests
+    {
+        [Fact]
+        public void MatchPassesSubject()
+        {
+            A subject = new B();
+
+            Switch<string>.On(subject)
+                .Match<A>(x =>
+                {
+                    Assert.Equal(subject, x);
+                    return "";
+                })
+                .Match<B>(x =>
+                {
+                    Assert.Equal(subject, x);
+                    return "";
+                })
+                .Match<C>(x => { throw new Exception("Should not be called."); })
+                .OrThrow();
+        }
+
+        [Fact]
+        public void MatchOnType()
+        {
+            Assert.Equal("B",
+                Switch<string>.On((object)new B())
+                    .Match<A>(x => "A")
+                    .Match<B>(x => "B")
+                    .Match<C>(x => "C")
+                    .OrThrow());
+        }
+
+        [Fact]
+        public void MatchOnTypeAndPredicate()
+        {
+            Assert.Equal("B",
+                Switch<string>.On((object)new B())
+                    .Match<A>(x => false, x => "A")
+                    .Match<B>(x => "B")
+                    .Match<C>(x => "C")
+                    .OrThrow());
+        }
+
         [Fact]
         public void MatchOnValue()
         {
@@ -39,17 +91,6 @@ namespace ShinySwitch.Tests
         }
 
         [Fact]
-        public void MatchOnValueAndConstantPredicate()
-        {
-            Assert.Equal("B",
-                Switch<string>.On(TheEnum.B)
-                    .Match(TheEnum.A, false, x => "A")
-                    .Match(TheEnum.B, x => "B")
-                    .Match(TheEnum.C, x => "C")
-                    .OrThrow());
-        }
-
-        [Fact]
         public void IfMatchThen()
         {
             Assert.Equal("Bthen",
@@ -68,51 +109,12 @@ namespace ShinySwitch.Tests
                     .Then((result, x) => result + "then")
                     .Else(""));
         }
+    }
 
-        [Fact]
-        public void IfNoMatchThenElse()
-        {
-            Assert.Equal("else",
-                Switch<string>.On(TheEnum.B)
-                    .Match(TheEnum.A, x => "A")
-                    .Else(() => "else"));
-        }
-
-        [Fact]
-        public void IfMatchThenNoElse()
-        {
-            Assert.Equal("A",
-                Switch<string>.On(TheEnum.A)
-                    .Match(TheEnum.A, x => "A")
-                    .Else(() => "else"));
-        }
-
-
-        [Fact]
-        public void IfNoMatchThenThrow()
-        {
-            Assert.Throws<Exception>(() =>
-                Switch<string>.On(TheEnum.B)
-                    .Match(TheEnum.A, x => "A")
-                    .OrThrow(new Exception("ohno")));
-        }
-
-        [Fact]
-        public void IfMatchThenNoThrow()
-        {
-            var exception = Record.Exception(() =>
-                Switch<string>.On(TheEnum.A)
-                    .Match(TheEnum.A, x => "A")
-                    .OrThrow(new Exception("ohno")));
-
-            Assert.Equal(null, exception);
-        }
-
-        public enum TheEnum
-        {
-            A,
-            B,
-            C
-        }
+    public enum TheEnum
+    {
+        A,
+        B,
+        C
     }
 }

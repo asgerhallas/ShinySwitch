@@ -1,13 +1,13 @@
-using System;
+﻿using System;
 using Xunit;
 
 namespace ShinySwitch.Tests
 {
-    public class SystemTypeSwitchStatementTests
+    public class TypeSwitchStatementTests
     {
         string result;
 
-        public SystemTypeSwitchStatementTests()
+        public TypeSwitchStatementTests()
         {
             result = "";
         }
@@ -15,16 +15,18 @@ namespace ShinySwitch.Tests
         [Fact]
         public void MatchPassesSubject()
         {
-            Switch.On(typeof(B))
-                .Match<A>(x => Assert.Equal(typeof(B), x))
-                .Match<B>(x => Assert.Equal(typeof(B), x))
-                .Match<C>(x => { throw new Exception("Should not be called.");});
+            var subject = new B();
+
+            Switch.On((object)subject)
+                .Match<A>(x => Assert.Equal(subject, x))
+                .Match<B>(x => Assert.Equal(subject, x))
+                .Match<C>(x => { throw new Exception("Should not be called."); });
         }
 
         [Fact]
         public void MatchOnType()
         {
-            Switch.On(typeof (B))
+            Switch.On((object)new B())
                 .Match<A>(x => result += "A")
                 .Match<B>(x => result += "B")
                 .Match<C>(x => result += "C");
@@ -35,7 +37,7 @@ namespace ShinySwitch.Tests
         [Fact]
         public void MatchOnTypeAndPredicate()
         {
-            Switch.On(typeof(B))
+            Switch.On((object)new B())
                 .Match<A>(x => false, x => result += "A")
                 .Match<B>(x => result += "B")
                 .Match<C>(x => result += "C");
@@ -46,7 +48,7 @@ namespace ShinySwitch.Tests
         [Fact]
         public void IfMatchThen()
         {
-            Switch.On(typeof(B))
+            Switch.On(new B())
                 .Match<B>(x => result += "B")
                 .Then(x => result += "then");
 
@@ -56,15 +58,15 @@ namespace ShinySwitch.Tests
         [Fact]
         public void IfNoMatchNoThen()
         {
-            Switch.On(typeof(B))
+            Switch.On((object)new B())
                 .Match<C>(x => result += "C")
                 .Then(x => result += "then");
 
             Assert.Equal("", result);
         }
-    }
 
-    public class A { }
-    public class B : A { }
-    public class C : A { }
+        public class A { }
+        public class B : A { }
+        public class C : A { }
+    }
 }

@@ -2,66 +2,20 @@
 
 namespace ShinySwitch
 {
-    public class SystemTypeSwitchExpression<TReturn>
+    public class SystemTypeSwitchExpression<TExpression> : SwitchExpression<Type, TExpression>
     {
-        readonly Type subject;
-        readonly SwitchResult<TReturn> result;
+        internal SystemTypeSwitchExpression(Type subject, SwitchResult<TExpression> result) : base(subject, result) { }
 
-        internal SystemTypeSwitchExpression(Type subject, SwitchResult<TReturn> result)
+        public SystemTypeSwitchExpression<TExpression> Match<T>(Func<Type, TExpression> func) => MatchInternal(x => typeof(T).IsAssignableFrom(subject), func);
+        public SystemTypeSwitchExpression<TExpression> Match<T>(Func<Type, bool> predicate, Func<Type, TExpression> func) => MatchInternal(x => typeof (T).IsAssignableFrom(subject) && predicate(x), func);
+        public SystemTypeSwitchExpression<TExpression> Then(Func<TExpression, Type, TExpression> func) => MatchInternal(x => result.HasResult, x => func(result.Result, x));
+
+        public SystemTypeSwitchExpression<TExpression> MatchInternal(Func<Type, bool> predicate, Func<Type, TExpression> func)
         {
-            this.subject = subject;
-            this.result = result;
-        }
-
-        public SystemTypeSwitchExpression<TReturn> Match<T>(Func<Type, TReturn> func) => Match<T>(x => true, func);
-        public SystemTypeSwitchExpression<TReturn> Match<T>(bool predicate, Func<Type, TReturn> func) => Match<T>(x => predicate, func);
-
-        public SystemTypeSwitchExpression<TReturn> Match<T>(Func<Type, bool> predicate, Func<Type, TReturn> func)
-        {
-            return typeof(T).IsAssignableFrom(subject) && predicate(subject)
-                ? new SystemTypeSwitchExpression<TReturn>(subject, new SwitchResult<TReturn>(func(subject)))
+            return predicate(subject)
+                ? new SystemTypeSwitchExpression<TExpression>(subject, 
+                    new SwitchResult<TExpression>(func(subject)))
                 : this;
-        }
-
-        public SystemTypeSwitchExpression<TReturn> Then(Func<TReturn, object, TReturn> func)
-        {
-            return result.HasResult 
-                ? new SystemTypeSwitchExpression<TReturn>(subject, new SwitchResult<TReturn>(func(result.Result, subject))) 
-                : this;
-        }
-
-        public TReturn Else(TReturn value)
-        {
-            return result.HasResult
-                ? result.Result
-                : value;
-        }
-
-        public TReturn Else(Func<TReturn> func)
-        {
-            return result.HasResult
-                ? result.Result
-                : func();
-        }
-
-        public TReturn OrThrow(Exception exception = null)
-        {
-            if (result.HasResult)
-            {
-                return result.Result;
-            }
-
-            throw exception ?? new ArgumentOutOfRangeException();
-        }
-
-        public TReturn OrDefault()
-        {
-            if (result.HasResult)
-            {
-                return result.Result;
-            }
-
-            return default(TReturn);
         }
     }
 }

@@ -2,60 +2,24 @@
 
 namespace ShinySwitch
 {
-    public class SystemTypeSwitchStatement
+    public class SystemTypeSwitchStatement : SwitchStatement<Type>
     {
-        readonly Type subject;
-        readonly bool match;
+        internal SystemTypeSwitchStatement(Type subject, SwitchResult<bool> result) : base(subject, result) {}
 
-        public SystemTypeSwitchStatement(Type subject, bool match)
-        {
-            this.subject = subject;
-            this.match = match;
-        }
+        public SystemTypeSwitchStatement Match<T>(Action<Type> action) => MatchInternal(x => typeof(T).IsAssignableFrom(subject), action);
+        public SystemTypeSwitchStatement Match<T>(Func<Type, bool> predicate, Action<Type> action) => MatchInternal(x => typeof(T).IsAssignableFrom(subject) && predicate(x), action);
 
-        public SystemTypeSwitchStatement Match<T>(Action<Type> action)
-        {
-            return Match<T>(x => true, action);
-        }
+        public SystemTypeSwitchStatement Then(Action<Type> action) => MatchInternal(x => result.HasResult, action);
 
-        public SystemTypeSwitchStatement Match<T>(bool predicate, Action<Type> action)
+        public SystemTypeSwitchStatement MatchInternal(Func<Type, bool> predicate, Action<Type> action)
         {
-            return Match<T>(x => predicate, action);
-        }
-
-        public SystemTypeSwitchStatement Match<T>(Func<Type, bool> predicate, Action<Type> action)
-        {
-            if (typeof(T).IsAssignableFrom(subject) && predicate(subject))
+            if (predicate(subject))
             {
                 action(subject);
-                return new SystemTypeSwitchStatement(subject, true);
+                return new SystemTypeSwitchStatement(subject, new SwitchResult<bool>(true));
             }
 
             return this;
-        }
-
-        public SystemTypeSwitchStatement Then(Action<Type> action)
-        {
-            if (match)
-            {
-                action(subject);
-            }
-
-            return this;
-        }
-
-        public void Else(Action<Type> action)
-        {
-            if (match) return;
-
-            action(subject);
-        }
-
-        public void OrThrow(Exception exception)
-        {
-            if (match) return;
-
-            throw exception;
         }
     }
 }

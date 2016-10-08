@@ -46,17 +46,6 @@ namespace ShinySwitch.Tests
         }
 
         [Fact]
-        public void MatchOnTypeAndConstantPredicate()
-        {
-            Assert.Equal("B",
-                Switch<string>.On(typeof(B))
-                    .Match<A>(false, x => "A")
-                    .Match<B>(x => "B")
-                    .Match<C>(x => "C")
-                    .OrThrow());
-        }
-
-        [Fact]
         public void IfMatchThen()
         {
             Assert.Equal("Bthen", 
@@ -75,46 +64,6 @@ namespace ShinySwitch.Tests
                     .Then((result, x) => result + "then")
                     .Else(""));
         }
-
-        [Fact]
-        public void IfNoMatchThenElse()
-        {
-            Assert.Equal("else",
-                Switch<string>.On(typeof(object))
-                    .Match<A>(x => "A")
-                    .Else(() => "else"));
-        }
-
-        [Fact]
-        public void IfMatchThenNoElse()
-        {
-            Assert.Equal("A",
-                Switch<string>.On(typeof(A))
-                    .Match<A>(x => "A")
-                    .Else(() => "else"));
-        }
-
-
-        [Fact]
-        public void IfNoMatchThenThrow()
-        {
-            Assert.Throws<Exception>(() =>
-                Switch<string>.On(typeof(object))
-                    .Match<A>(x => "A")
-                    .OrThrow(new Exception("ohno")));
-        }
-
-        [Fact]
-        public void IfMatchThenNoThrow()
-        {
-            var exception = Record.Exception(() =>
-                Switch<string>.On(typeof(A))
-                    .Match<A>(x => "A")
-                    .OrThrow(new Exception("ohno")));
-
-            Assert.Equal(null, exception);
-        }
-
 
         public class A { }
         public class B : A { }

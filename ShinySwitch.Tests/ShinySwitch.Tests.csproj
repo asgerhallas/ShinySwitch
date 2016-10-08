@@ -56,10 +56,11 @@
     </Reference>
   </ItemGroup>
   <ItemGroup>
-    <Compile Include="SwitchExpressionMatchValueTests.cs" />
-    <Compile Include="SwitchExpressionMatchTypeTests.cs" />
-    <Compile Include="SwitchStatementMatchTypeTests.cs" />
+    <Compile Include="TypeSwitchExpressionTests.cs" />
+    <Compile Include="SwitchExpressionTests.cs" />
+    <Compile Include="TypeSwitchStatementTests.cs" />
     <Compile Include="Properties\AssemblyInfo.cs" />
+    <Compile Include="SwitchStatementTests.cs" />
     <Compile Include="SystemTypeSwitchExpressionTests.cs" />
     <Compile Include="SystemTypeSwitchStatementTests.cs" />
   </ItemGroup>

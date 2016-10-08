@@ -1,6 +1,6 @@
 ﻿namespace ShinySwitch
 {
-    internal class SwitchResult<TReturn>
+    public class SwitchResult<TReturn>
     {
         public SwitchResult()
         {
