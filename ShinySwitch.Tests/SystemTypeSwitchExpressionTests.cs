@@ -26,11 +26,20 @@ namespace ShinySwitch.Tests
         [Fact]
         public void MatchOnType()
         {
-            Assert.Equal("B",
+            Assert.Equal("C",
+                Switch<string>.On(typeof(C))
+                    .Match<B>(x => "B")
+                    .Match<C>(x => "C")
+                    .OrThrow());
+        }
+
+        [Fact]
+        public void FirstMatchWins()
+        {
+            Assert.Equal("A",
                 Switch<string>.On(typeof(B))
                     .Match<A>(x => "A")
                     .Match<B>(x => "B")
-                    .Match<C>(x => "C")
                     .OrThrow());
         }
 
