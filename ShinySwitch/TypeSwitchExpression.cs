@@ -2,15 +2,25 @@
 
 namespace ShinySwitch
 {
+    //todo: should there be different switches if the subject is a value type (so we should not cast to object)
+    //or should that be avoided by a deliberte .MatchInterface<T> method? Or should it be avoided at all?
+    //the match method it self could also check - but that would only be ok if the switch is cached eg lazy... is it a good idea, or should it be kept simpler?
+
+    //todo: make it possible to seperate build of matches and execution, so it could be intercepted to build eg a visitor where steps can be intercepted
+    //it could also be intercepted when eager ... hmm..
+
+    //if lazy then either build _and_ execution is done with extension methods, for same syntax as now (to be able to give value upfront and carry it along until execution)
+    //or a build that you pass to the executor like: Switch<string>.On(value, Switch.Match<>().Else(x)) and behind the scenes: Switch.Match<>().Else(x).Execute(value)
+
     public class TypeSwitchExpression<TSubject, TExpression> : SwitchExpression<TSubject, TExpression>
     {
         internal TypeSwitchExpression(TSubject subject, SwitchResult<TExpression> result) : base(subject, result) { }
 
-        public TypeSwitchExpression<TSubject, TExpression> Match<T>(Func<T, TExpression> func) where T : TSubject => MatchIf(subject is T, () => func((T)subject));
+        public TypeSwitchExpression<TSubject, TExpression> Match<T>(Func<T, TExpression> func) => MatchIf(subject is T, () => func((T)(object)subject));
         public TypeSwitchExpression<TSubject, TExpression> Match(TSubject value, Func<TSubject, TExpression> func) => MatchIf(Equals(subject, value), () => func(subject));
         public TypeSwitchExpression<TSubject, TExpression> Match(TSubject value, TExpression returnValue) => MatchIf(Equals(subject, value), () => returnValue);
 
-        public TypeSwitchExpression<TSubject, TExpression> Match<T>(Func<T, bool> predicate, Func<T, TExpression> func) where T : TSubject => MatchIf(subject is T && predicate((T) subject), () => func((T)subject));
+        public TypeSwitchExpression<TSubject, TExpression> Match<T>(Func<T, bool> predicate, Func<T, TExpression> func) => MatchIf(subject is T && predicate((T)(object)subject), () => func((T)(object)subject));
         public TypeSwitchExpression<TSubject, TExpression> Match(TSubject value, Func<TSubject, bool> predicate, Func<TSubject, TExpression> func) => MatchIf(Equals(subject, value) && predicate(subject), () => func(subject));
         public TypeSwitchExpression<TSubject, TExpression> Match(TSubject value, Func<TSubject, bool> predicate, TExpression returnValue) => MatchIf(Equals(subject, value) && predicate(subject), () => returnValue);
 
@@ -34,8 +44,8 @@ namespace ShinySwitch
         {
         }
 
-        public TypeSwitchExpression2<TLeft, TRight, TExpression> Match<TL, TR>(Func<TL, TR, TExpression> func) where TL : TLeft where TR : TRight =>
-            MatchIf(subject.Item1 is TL && subject.Item2 is TR, () => func((TL) subject.Item1, (TR) subject.Item2));
+        public TypeSwitchExpression2<TLeft, TRight, TExpression> Match<TL, TR>(Func<TL, TR, TExpression> func) =>
+            MatchIf(subject.Item1 is TL && subject.Item2 is TR, () => func((TL)(object) subject.Item1, (TR)(object) subject.Item2));
 
         public TypeSwitchExpression2<TLeft, TRight, TExpression> Match(TLeft left, TRight right, Func<TLeft, TRight, TExpression> func) =>
             MatchIf(Equals(subject.Item1, left) && Equals(subject.Item2, right), () => func(subject.Item1, subject.Item2));

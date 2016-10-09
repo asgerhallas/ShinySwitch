@@ -36,6 +36,24 @@ namespace ShinySwitch.Tests
         }
 
         [Fact]
+        public void MatchOnInterface()
+        {
+            Assert.Equal("C",
+                Switch<string>.On((A)new C())
+                    .Match<X>(x => "C"));
+        }
+
+        //[Fact]
+        //public void MatchOnType2()
+        //{
+        //    Assert.Equal("C",
+        //        Switch<string, object>
+        //            .Match<B>(x => "B")
+        //            .Match<C>(x => "C"))
+        //        .OrThrow());
+        //}
+
+        [Fact]
         public void MatchOnTypeFirstMatchWins()
         {
             Assert.Equal("A",
