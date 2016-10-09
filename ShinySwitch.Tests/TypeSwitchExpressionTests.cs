@@ -3,16 +3,6 @@ using Xunit;
 
 namespace ShinySwitch.Tests
 {
-    public class TypeSwitchExpression2Tests
-    {
-        //[Fact]
-        //public void FactMethodName()
-        //{
-        //    Switch<string>.On(new B(), TheEnum.C)
-        //        .Match<B>()
-        //}
-    }
-
     public class TypeSwitchExpressionTests
     {
         [Fact]
@@ -38,7 +28,17 @@ namespace ShinySwitch.Tests
         [Fact]
         public void MatchOnType()
         {
-            Assert.Equal("B",
+            Assert.Equal("C",
+                Switch<string>.On((object)new C())
+                    .Match<B>(x => "B")
+                    .Match<C>(x => "C")
+                    .OrThrow());
+        }
+
+        [Fact]
+        public void MatchOnTypeFirstMatchWins()
+        {
+            Assert.Equal("A",
                 Switch<string>.On((object)new B())
                     .Match<A>(x => "A")
                     .Match<B>(x => "B")
@@ -109,12 +109,5 @@ namespace ShinySwitch.Tests
                     .Then((result, x) => result + "then")
                     .Else(""));
         }
-    }
-
-    public enum TheEnum
-    {
-        A,
-        B,
-        C
     }
 }
