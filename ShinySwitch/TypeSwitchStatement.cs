@@ -6,19 +6,19 @@ namespace ShinySwitch
     {
         internal TypeSwitchStatement(TSubject subject, SwitchResult<bool> result) : base(subject, result) { }
 
-        public TypeSwitchStatement<TSubject> Match<T>(Action<T> action) where T : TSubject => MatchIf(x => subject is T, action);
+        public TypeSwitchStatement<TSubject> Match<T>(Action<T> action) => MatchIf(subject is T, () => action((T)(object)subject));
         public TypeSwitchStatement<TSubject> Match(TSubject value, Action<TSubject> action) => Match(x => Equals(x, value), action);
 
-        public TypeSwitchStatement<TSubject> Match<T>(Func<T, bool> predicate, Action<T> action) where T : TSubject => MatchIf(x => subject is T && predicate((T)x), action);
+        public TypeSwitchStatement<TSubject> Match<T>(Func<T, bool> predicate, Action<T> action) => MatchIf(subject is T && predicate((T)(object)subject), () => action((T)(object)subject));
         public TypeSwitchStatement<TSubject> Match(TSubject value, Func<TSubject, bool> predicate, Action<TSubject> action) => Match(x => Equals(x, value) && predicate(x), action);
 
-        public TypeSwitchStatement<TSubject> Then(Action<TSubject> action) => MatchIf(x => result.HasResult, action);
+        public TypeSwitchStatement<TSubject> Then(Action<TSubject> action) => MatchIf(result.HasResult, () => action(subject));
 
-        internal TypeSwitchStatement<TSubject> MatchIf<T>(Func<TSubject, bool> predicate, Action<T> action) where T:TSubject
+        internal TypeSwitchStatement<TSubject> MatchIf(bool predicate, Action action)
         {
-            if (predicate(subject))
+            if (predicate)
             {
-                action((T)subject);
+                action();
                 return new TypeSwitchStatement<TSubject>(subject, new SwitchResult<bool>(true));
             }
 

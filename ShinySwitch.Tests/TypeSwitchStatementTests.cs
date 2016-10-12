@@ -26,7 +26,7 @@ namespace ShinySwitch.Tests
         [Fact]
         public void MatchOnType()
         {
-            Switch.On((object)new B())
+            Switch.On(new B())
                 .Match<A>(x => result += "A")
                 .Match<B>(x => result += "B")
                 .Match<C>(x => result += "C");
