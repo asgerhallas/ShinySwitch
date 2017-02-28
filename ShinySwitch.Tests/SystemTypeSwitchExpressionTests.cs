@@ -74,6 +74,16 @@ namespace ShinySwitch.Tests
                     .Else(""));
         }
 
+        [Fact]
+        public void IfMatchThenChangeTYpe()
+        {
+            Assert.Equal("1then",
+                Switch<int>.On(typeof(B))
+                    .Match<B>(x => 1)
+                    .Then((result, x) => result + "then")
+                    .OrThrow());
+        }
+
         public class A { }
         public class B : A { }
         public class C : A { }
