@@ -24,9 +24,9 @@ namespace ShinySwitch
         public TypeSwitchExpression<TSubject, TExpression> Match(TSubject value, Func<TSubject, bool> predicate, Func<TSubject, TExpression> func) => MatchIf(Equals(subject, value) && predicate(subject), () => func(subject));
         public TypeSwitchExpression<TSubject, TExpression> Match(TSubject value, Func<TSubject, bool> predicate, TExpression returnValue) => MatchIf(Equals(subject, value) && predicate(subject), () => returnValue);
 
-        public TypeSwitchExpression<TSubject, TNewExpression> Then<TNewExpression>(Func<TExpression, TSubject, TNewExpression> func) =>
+        public TypeSwitchExpression<TSubject, TNewExpression> Then<TNewExpression>(Func<TExpression, TNewExpression> func) =>
             result.HasResult
-                ? new TypeSwitchExpression<TSubject, TNewExpression>(subject, new SwitchResult<TNewExpression>(func(result.Result, subject)))
+                ? new TypeSwitchExpression<TSubject, TNewExpression>(subject, new SwitchResult<TNewExpression>(func(result.Result)))
                 : new TypeSwitchExpression<TSubject, TNewExpression>(subject, new SwitchResult<TNewExpression>());
 
         internal TypeSwitchExpression<TSubject, TExpression> MatchIf(bool predicate, Func<TExpression> func) => 
@@ -78,10 +78,10 @@ namespace ShinySwitch
         public TypeSwitchExpression2<TLeft, TRight, TExpression> MatchRight<TR>(Func<TR, bool> predicate, Func<TLeft, TR, TExpression> func) where TR : TRight =>
             MatchIf(subject.Item2 is TR && predicate((TR)subject.Item2), () => func(subject.Item1, (TR)subject.Item2));
 
-        public TypeSwitchExpression2<TLeft, TRight, TNewExpression> Then<TNewExpression>(Func<TExpression, TLeft, TRight, TNewExpression> func) =>
+        public TypeSwitchExpression2<TLeft, TRight, TNewExpression> Then<TNewExpression>(Func<TExpression, TNewExpression> func) =>
             result.HasResult
                 ? new TypeSwitchExpression2<TLeft, TRight, TNewExpression>(subject.Item1, subject.Item2,
-                    new SwitchResult<TNewExpression>(func(result.Result, subject.Item1, subject.Item2)))
+                    new SwitchResult<TNewExpression>(func(result.Result)))
                 : new TypeSwitchExpression2<TLeft, TRight, TNewExpression>(subject.Item1, subject.Item2,
                     new SwitchResult<TNewExpression>());
 

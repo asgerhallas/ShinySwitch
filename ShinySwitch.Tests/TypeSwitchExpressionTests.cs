@@ -114,7 +114,7 @@ namespace ShinySwitch.Tests
             Assert.Equal("Bthen",
                 Switch<string>.On(TheEnum.B)
                     .Match(TheEnum.B, x => "B")
-                    .Then((result, x) => result + "then")
+                    .Then(result => result + "then")
                     .OrThrow());
         }
 
@@ -124,7 +124,7 @@ namespace ShinySwitch.Tests
             Assert.Equal("",
                 Switch<string>.On(TheEnum.B)
                     .Match(TheEnum.C, x => "C")
-                    .Then((result, x) => result + "then")
+                    .Then(result => result + "then")
                     .Else(""));
         }
 
@@ -134,7 +134,7 @@ namespace ShinySwitch.Tests
             Assert.Equal("1then",
                 Switch<int>.On(TheEnum.B)
                     .Match(TheEnum.B, x => 1)
-                    .Then((result, x) => result + "then")
+                    .Then(result => result + "then")
                     .OrThrow());
         }
     }
