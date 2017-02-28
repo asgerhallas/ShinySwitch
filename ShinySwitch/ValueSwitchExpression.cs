@@ -16,12 +16,16 @@ namespace ShinySwitch
         public ValueSwitchExpression<TValue, TReturn> Match(TValue prototype, Func<TValue, TReturn> func) => Match(prototype, _ => true, func);
         public ValueSwitchExpression<TValue, TReturn> Match(TValue prototype, bool predicate, Func<TValue, TReturn> func) => Match(prototype, _ => predicate, func);
 
-        public ValueSwitchExpression<TValue, TReturn> Match(TValue prototype, Func<TValue, bool> predicate, Func<TValue, TReturn> func)
-        {
-            return Equals(subject, prototype) && predicate(subject)
+        public ValueSwitchExpression<TValue, TReturn> Match(TValue prototype, Func<TValue, bool> predicate, Func<TValue, TReturn> func) => 
+            Equals(subject, prototype) && predicate(subject)
                 ? new ValueSwitchExpression<TValue, TReturn>(subject, new SwitchResult<TReturn>(func(subject)))
                 : this;
-        }
+
+        public ValueSwitchExpression<TValue, TReturn> Match(bool predicate, Func<TValue, TReturn> func) => 
+            predicate
+                ? new ValueSwitchExpression<TValue, TReturn>(subject, new SwitchResult<TReturn>(func(subject)))
+                : this;
+
 
         public ValueSwitchExpression<TValue, TNewReturn> Then<TNewReturn>(Func<TReturn, object, TNewReturn> func)
         {
