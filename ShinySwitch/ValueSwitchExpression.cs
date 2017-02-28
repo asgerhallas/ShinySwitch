@@ -23,11 +23,11 @@ namespace ShinySwitch
                 : this;
         }
 
-        public ValueSwitchExpression<TValue, TReturn> Then(Func<TReturn, object, TReturn> func)
+        public ValueSwitchExpression<TValue, TNewReturn> Then<TNewReturn>(Func<TReturn, object, TNewReturn> func)
         {
             return result.HasResult
-                ? new ValueSwitchExpression<TValue, TReturn>(subject, new SwitchResult<TReturn>(func(result.Result, subject)))
-                : this;
+                ? new ValueSwitchExpression<TValue, TNewReturn>(subject, new SwitchResult<TNewReturn>(func(result.Result, subject)))
+                : new ValueSwitchExpression<TValue, TNewReturn>(subject, new SwitchResult<TNewReturn>());
         }
 
         public TReturn Else(TReturn value)

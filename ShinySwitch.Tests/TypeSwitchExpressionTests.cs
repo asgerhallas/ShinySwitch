@@ -127,5 +127,15 @@ namespace ShinySwitch.Tests
                     .Then((result, x) => result + "then")
                     .Else(""));
         }
+
+        [Fact]
+        public void IfMatchThenChangeType()
+        {
+            Assert.Equal("1then",
+                Switch<int>.On(TheEnum.B)
+                    .Match(TheEnum.B, x => 1)
+                    .Then((result, x) => result + "then")
+                    .OrThrow());
+        }
     }
 }
