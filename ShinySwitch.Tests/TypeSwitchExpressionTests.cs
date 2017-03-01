@@ -137,5 +137,16 @@ namespace ShinySwitch.Tests
                     .Then(result => result + "then")
                     .OrThrow());
         }
+
+        [Fact]
+        public void IfMatchOnPredicate()
+        {
+            Assert.Equal("B",
+                Switch<string>.On("anything")
+                    .Match(false, x => "A")
+                    .Match(true, x => "B")
+                    .Match(false, x => "C")
+                    .OrThrow());
+        }
     }
 }

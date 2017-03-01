@@ -54,7 +54,6 @@
     <Compile Include="TypeSwitchStatement.cs" />
     <Compile Include="SystemTypeSwitchExpression.cs" />
     <Compile Include="SystemTypeSwitchStatement.cs" />
-    <Compile Include="ValueSwitchExpression.cs" />
   </ItemGroup>
   <ItemGroup>
     <None Include="ShinySwitch.nuspec" />
