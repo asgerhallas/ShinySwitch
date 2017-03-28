@@ -63,6 +63,20 @@ namespace ShinySwitch.Tests
                     .Else(() => "else"));
         }
 
+        [Fact]
+        public void SwitchAnonExpression()
+        {
+            Assert.Equal(new {a = "a"},
+                Switch.On("").Return(new {a = ""})
+                    .Match<string>(y => new {a = "a"})
+                    .Else(new { a = "b" }));
+        }
+
+        SystemTypeSwitchExpression<T> Match<T>(Func<object, T> func)
+        {
+            return null;
+        }
+
         public class TestSwitchExpression : SwitchExpression<object, string>
         {
             public TestSwitchExpression(object subject, SwitchResult<string> result) : base(subject, result)

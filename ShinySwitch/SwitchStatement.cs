@@ -4,8 +4,8 @@ namespace ShinySwitch
 {
     public abstract class SwitchStatement<TSubject>
     {
-        protected readonly TSubject subject;
-        protected readonly SwitchResult<bool> result;
+        internal readonly TSubject subject;
+        internal readonly SwitchResult<bool> result;
 
         protected SwitchStatement(TSubject subject, SwitchResult<bool> result)
         {

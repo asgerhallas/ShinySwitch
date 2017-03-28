@@ -14,4 +14,10 @@ namespace ShinySwitch
         public static TypeSwitchExpression2<TLeft, TRight, TExpression> On<TLeft, TRight>(TLeft left, TRight right) => new TypeSwitchExpression2<TLeft, TRight, TExpression>(left, right, new SwitchResult<TExpression>());
         public static SystemTypeSwitchExpression<TExpression> On(Type subject) => new SystemTypeSwitchExpression<TExpression>(subject, new SwitchResult<TExpression>());
     }
+
+    public static class SwitchStatementEx
+    {
+        public static TypeSwitchExpression<TSubject, TExpression> Return<TExpression, TSubject>(this SwitchStatement<TSubject> expression, TExpression prototype) => 
+            new TypeSwitchExpression<TSubject, TExpression>(expression.subject, new SwitchResult<TExpression>());
+    }
 }
