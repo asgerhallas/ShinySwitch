@@ -1,13 +1,19 @@
 ﻿using System;
+using System.Reflection;
 
 namespace ShinySwitch
 {
     public class SystemTypeSwitchExpression<TExpression> : SwitchExpression<Type, TExpression>
     {
-        internal SystemTypeSwitchExpression(Type subject, SwitchResult<TExpression> result) : base(subject, result) { }
+        readonly TypeInfo subjectTypeInfo;
 
-        public SystemTypeSwitchExpression<TExpression> Match<T>(Func<Type, TExpression> func) => MatchIf(typeof(T).IsAssignableFrom(subject), () => func(subject));
-        public SystemTypeSwitchExpression<TExpression> Match<T>(Func<Type, bool> predicate, Func<Type, TExpression> func) => MatchIf(typeof (T).IsAssignableFrom(subject) && predicate(subject), () => func(subject));
+        internal SystemTypeSwitchExpression(Type subject, SwitchResult<TExpression> result) : base(subject, result)
+        {
+            subjectTypeInfo = subject.GetTypeInfo();
+        }
+
+        public SystemTypeSwitchExpression<TExpression> Match<T>(Func<Type, TExpression> func) => MatchIf(typeof(T).GetTypeInfo().IsAssignableFrom(subjectTypeInfo), () => func(subject));
+        public SystemTypeSwitchExpression<TExpression> Match<T>(Func<Type, bool> predicate, Func<Type, TExpression> func) => MatchIf(typeof (T).GetTypeInfo().IsAssignableFrom(subjectTypeInfo) && predicate(subject), () => func(subject));
 
         public SystemTypeSwitchExpression<TNewExpression> Then<TNewExpression>(Func<TExpression, TNewExpression> func) =>
             result.HasResult
