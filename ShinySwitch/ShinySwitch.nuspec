@@ -11,4 +11,8 @@
     <description>Switch on types and predicate functions</description>
     <copyright>Copyright 2016</copyright>
   </metadata>
+  <files>
+    <file src="ShinySwitch.dll" target="lib\portable-net45+win8+wpa81\ShinySwitch.dll"></file>
+    <file src="ShinySwitch.pdb" target="lib\portable-net45+win8+wpa81\ShinySwitch.pdb"></file>
+  </files>
 </package>
