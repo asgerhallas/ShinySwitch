@@ -1,10 +1,16 @@
 using System;
+using System.Diagnostics;
 using Xunit;
+using Xunit.Abstractions;
 
 namespace ShinySwitch.Tests
 {
     public class TypeSwitchExpressionTests
     {
+        readonly ITestOutputHelper output;
+
+        public TypeSwitchExpressionTests(ITestOutputHelper output) => this.output = output;
+
         [Fact]
         public void MatchPassesSubject()
         {
@@ -80,6 +86,8 @@ namespace ShinySwitch.Tests
         {
             Assert.Equal("B",
                 Switch<string>.On(TheEnum.B)
+                    .Match(1, _ => "1")
+                    .Match(2, _ => "2")
                     .Match(TheEnum.A, _ => "A")
                     .Match(TheEnum.B, _ => "B")
                     .Match(TheEnum.C, _ => "C")
@@ -91,6 +99,8 @@ namespace ShinySwitch.Tests
         {
             Assert.Equal("B",
                 Switch<string>.On(TheEnum.B)
+                    .Match(1, _ => "1")
+                    .Match(2, _ => "2")
                     .Match(TheEnum.A, "A")
                     .Match(TheEnum.B, "B")
                     .Match(TheEnum.C, "C")
@@ -102,7 +112,9 @@ namespace ShinySwitch.Tests
         {
             Assert.Equal("B",
                 Switch<string>.On(TheEnum.B)
-                    .Match(TheEnum.A, x => false, x => "A")
+                    .Match(1, _ => "1")
+                    .Match(2, _ => "2")
+                    .Match(TheEnum.B, x => false, x => "A")
                     .Match(TheEnum.B, x => "B")
                     .Match(TheEnum.C, x => "C")
                     .OrThrow());
@@ -143,10 +155,28 @@ namespace ShinySwitch.Tests
         {
             Assert.Equal("B",
                 Switch<string>.On("anything")
-                    .Match(false, x => "A")
-                    .Match(true, x => "B")
-                    .Match(false, x => "C")
+                    .Match(() => false, x => "A")
+                    .Match(() => true, x => "B")
+                    .Match(() => false, x => "C")
                     .OrThrow());
+        }
+
+        [Fact]
+        public void CrudePerformanceMeasure()
+        {
+            // 15-12-2017: 120ms on my machine :)
+
+            var sw = Stopwatch.StartNew();
+
+            for (int i = 0; i < 1000000; i++)
+            {
+                Switch<string>.On(new C())
+                    .Match<A>(x => "A")
+                    .Match<B>(x => "B")
+                    .Match<C>(x => "C");
+            }
+
+            output.WriteLine($"{sw.Elapsed.TotalMilliseconds}");
         }
     }
 }
