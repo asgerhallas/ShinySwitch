@@ -162,6 +162,28 @@ namespace ShinySwitch.Tests
         }
 
         [Fact]
+        public void MatchOnNullValue()
+        {
+            Assert.Equal("Null",
+                Switch<string>.On((object)null)
+                    .Match(1, _ => "1")
+                    .Match(TheEnum.A, "A")
+                    .MatchNull("Null")
+                    .OrThrow());
+        }
+
+        [Fact]
+        public void MatchOnNullValueReturnLazy()
+        {
+            Assert.Equal("Null",
+                Switch<string>.On((object)null)
+                    .Match(1, _ => "1")
+                    .Match(TheEnum.A, "A")
+                    .MatchNull(() => "Null")
+                    .OrThrow());
+        }
+
+        [Fact]
         public void CrudePerformanceMeasure()
         {
             // 15-12-2017: 120ms on my machine :)

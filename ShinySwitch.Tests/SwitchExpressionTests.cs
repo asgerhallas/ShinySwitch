@@ -56,20 +56,18 @@ namespace ShinySwitch.Tests
         }
 
         [Fact]
-        public void IfMatchThenNoElse()
-        {
-            Assert.Equal("A",
-                new TestSwitchExpression(new object(), new SwitchResult<string>("A"))
-                    .Else(() => "else"));
-        }
-
-        [Fact]
         public void SwitchAnonExpression()
         {
             Assert.Equal(new {a = "a"},
                 Switch.On("").Return(new {a = ""})
                     .Match<string>(y => new {a = "a"})
                     .Else(new { a = "b" }));
+        }
+
+        [Fact]
+        public void NullValues()
+        {
+            
         }
 
         SystemTypeSwitchExpression<T> Match<T>(Func<object, T> func)
