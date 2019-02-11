@@ -4,6 +4,10 @@
     <AssemblyName>ShinySwitch</AssemblyName>
     <PackageId>ShinySwitch</PackageId>
     <PackageProjectUrl>https://github.com/asgerhallas/ShinySwitch</PackageProjectUrl>
+    <Description>
+      You want to switch on type or value of an object? Or maybe on an instance of System.Type? As an expression or a statement? Try ShinySwitch :)
+      At least while we wait for this https://github.com/dotnet/csharplang/blob/master/proposals/patterns.md.
+    </Description>
     <GenerateAssemblyTitleAttribute>false</GenerateAssemblyTitleAttribute>
     <GenerateAssemblyDescriptionAttribute>false</GenerateAssemblyDescriptionAttribute>
     <GenerateAssemblyConfigurationAttribute>false</GenerateAssemblyConfigurationAttribute>
