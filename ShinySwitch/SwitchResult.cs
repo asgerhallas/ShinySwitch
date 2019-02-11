@@ -2,10 +2,7 @@
 {
     public class SwitchResult<TReturn>
     {
-        public SwitchResult()
-        {
-            HasResult = false;
-        }
+        public SwitchResult() => HasResult = false;
 
         public SwitchResult(TReturn result)
         {

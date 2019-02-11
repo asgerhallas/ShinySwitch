@@ -4,25 +4,25 @@ namespace ShinySwitch
 {
     public abstract class SwitchStatement<TSubject>
     {
-        internal readonly TSubject subject;
-        internal readonly SwitchResult<bool> result;
-
         protected SwitchStatement(TSubject subject, SwitchResult<bool> result)
         {
-            this.subject = subject;
-            this.result = result;
+            Subject = subject;
+            Result = result;
         }
+
+        public TSubject Subject { get; }
+        public SwitchResult<bool> Result { get; }
 
         public void Else(Action<object> action)
         {
-            if (result.HasResult) return;
+            if (Result.HasResult) return;
 
-            action(subject);
+            action(Subject);
         }
 
         public void OrThrow(Exception exception = null)
         {
-            if (result.HasResult) return;
+            if (Result.HasResult) return;
 
             throw exception ?? new ArgumentOutOfRangeException();
         }

@@ -18,6 +18,6 @@ namespace ShinySwitch
     public static class SwitchStatementEx
     {
         public static TypeSwitchExpression<TSubject, TExpression> Return<TExpression, TSubject>(this SwitchStatement<TSubject> expression, TExpression prototype) => 
-            new TypeSwitchExpression<TSubject, TExpression>(expression.subject, new SwitchResult<TExpression>());
+            new TypeSwitchExpression<TSubject, TExpression>(expression.Subject, new SwitchResult<TExpression>());
     }
 }

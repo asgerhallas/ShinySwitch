@@ -4,35 +4,32 @@ namespace ShinySwitch
 {
     public abstract class SwitchExpression<TSubject, TExpression>
     {
-        protected readonly TSubject subject;
-        protected readonly SwitchResult<TExpression> result;
-
         protected SwitchExpression(TSubject subject, SwitchResult<TExpression> result)
         {
-            this.subject = subject;
-            this.result = result;
+            Subject = subject;
+            Result = result;
         }
 
-        public TExpression Else(TExpression value) => result.HasResult ? result.Result : value;
-        public TExpression Else(Func<TExpression> func) => result.HasResult ? result.Result : func();
+        public TSubject Subject { get; }
+        public SwitchResult<TExpression> Result { get; }
 
-        public TExpression OrDefault() => result.HasResult ? result.Result : default(TExpression);
+        public TExpression Else(TExpression value) => Result.HasResult ? Result.Result : value;
+        public TExpression Else(Func<TExpression> func) => Result.HasResult ? Result.Result : func();
+
+        public TExpression OrDefault() => Result.HasResult ? Result.Result : default(TExpression);
 
         public TExpression OrThrow(Exception exception = null) => OrThrow(() => exception);
 
         public TExpression OrThrow(Func<Exception> exception)
         {
-            if (result.HasResult)
+            if (Result.HasResult)
             {
-                return result.Result;
+                return Result.Result;
             }
 
             throw exception() ?? new ArgumentOutOfRangeException();
         }
 
-        public static implicit operator TExpression(SwitchExpression<TSubject, TExpression> expression)
-        {
-            return expression.OrThrow();
-        }
+        public static implicit operator TExpression(SwitchExpression<TSubject, TExpression> expression) => expression.OrThrow();
     }
 }
