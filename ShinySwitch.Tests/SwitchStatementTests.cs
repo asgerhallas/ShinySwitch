@@ -26,7 +26,6 @@ namespace ShinySwitch.Tests
             Assert.Equal("", result);
         }
 
-
         [Fact]
         public void IfNoMatchThenThrow()
         {

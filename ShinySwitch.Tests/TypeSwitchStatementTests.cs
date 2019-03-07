@@ -7,10 +7,7 @@ namespace ShinySwitch.Tests
     {
         string result;
 
-        public TypeSwitchStatementTests()
-        {
-            result = "";
-        }
+        public TypeSwitchStatementTests() => result = "";
 
         [Fact]
         public void MatchPassesSubject()
@@ -20,18 +17,29 @@ namespace ShinySwitch.Tests
             Switch.On((object)subject)
                 .Match<A>(x => Assert.Equal(subject, x))
                 .Match<B>(x => Assert.Equal(subject, x))
-                .Match<C>(x => { throw new Exception("Should not be called."); });
+                .Match<C>(x => throw new Exception("Should not be called."));
         }
 
         [Fact]
         public void MatchOnType()
+        {
+            Switch.On(new C())
+                .Match<B>(x => result += "B")
+                .Match<C>(x => result += "C")
+                .Match<A>(x => result += "A");
+
+            Assert.Equal("C", result);
+        }
+
+        [Fact]
+        public void MatchOnType_NoFallThrough()
         {
             Switch.On(new B())
                 .Match<A>(x => result += "A")
                 .Match<B>(x => result += "B")
                 .Match<C>(x => result += "C");
 
-            Assert.Equal("AB", result);
+            Assert.Equal("A", result);
         }
 
         [Fact]

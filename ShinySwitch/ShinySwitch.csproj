@@ -1,6 +1,6 @@
 ﻿<Project Sdk="Microsoft.NET.Sdk">
   <PropertyGroup>
-    <TargetFrameworks>net45;netstandard1.1</TargetFrameworks>
+    <TargetFrameworks>net45;netstandard1.1;netstandard2.0</TargetFrameworks>
     <AssemblyName>ShinySwitch</AssemblyName>
     <PackageId>ShinySwitch</PackageId>
     <PackageProjectUrl>https://github.com/asgerhallas/ShinySwitch</PackageProjectUrl>
