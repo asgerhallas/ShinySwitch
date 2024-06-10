@@ -5,26 +5,30 @@ namespace ShinySwitch.Tests
 {
     public class SystemTypeSwitchStatementTests
     {
-        string result;
-
-        public SystemTypeSwitchStatementTests()
-        {
-            result = "";
-        }
+        string result = "";
 
         [Fact]
-        public void MatchPassesSubject()
-        {
+        public void MatchPassesSubject() =>
             Switch.On(typeof(B))
                 .Match<A>(x => Assert.Equal(typeof(B), x))
                 .Match<B>(x => Assert.Equal(typeof(B), x))
-                .Match<C>(x => { throw new Exception("Should not be called.");});
-        }
+                .Match<C>(x => throw new Exception("Should not be called."));
 
         [Fact]
         public void MatchOnType()
         {
             Switch.On(typeof (B))
+                .Match<A>(x => result += "A")
+                .Match<B>(x => result += "B")
+                .Match<C>(x => result += "C");
+
+            Assert.Equal("A", result);
+        }
+
+        [Fact]
+        public void MatchOnType_FallThrough()
+        {
+            Switch.On(typeof (B), matchMany: true)
                 .Match<A>(x => result += "A")
                 .Match<B>(x => result += "B")
                 .Match<C>(x => result += "C");
@@ -61,6 +65,28 @@ namespace ShinySwitch.Tests
                 .Then(x => result += "then");
 
             Assert.Equal("", result);
+        }
+
+        [Fact]
+        public void IfNoMatchNoThenButElse()
+        {
+            Switch.On(typeof(B))
+                .Match<C>(x => result += "C")
+                .Then(x => result += "then")
+                .Else(x => result += "else");
+
+            Assert.Equal("else", result);
+        }
+
+        [Fact]
+        public void FallThrough_Type()
+        {
+            Switch.On(typeof(B), matchMany: true)
+                .Match<A>(x => result += "A")
+                .Match<B>(x => result += "B")
+                .Match<C>(x => result += "C");
+
+            Assert.Equal("AB", result);
         }
     }
 

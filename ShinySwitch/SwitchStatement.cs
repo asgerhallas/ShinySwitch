@@ -2,29 +2,31 @@ using System;
 
 namespace ShinySwitch
 {
-    public abstract class SwitchStatement<TSubject>
+    public abstract class SwitchStatement<TSubject>(TSubject subject, MatchResult<bool> result, bool matchMany)
     {
-        protected SwitchStatement(TSubject subject, SwitchResult<bool> result)
-        {
-            Subject = subject;
-            Result = result;
-        }
-
-        public TSubject Subject { get; }
-        public SwitchResult<bool> Result { get; }
+        public TSubject Subject { get; } = subject;
+        public MatchResult<bool> Result { get; } = result;
+        public bool MatchMany { get; } = matchMany;
 
         public void Else(Action<object> action)
         {
-            if (Result.HasResult) return;
+            if (Result.HasMatch) return;
 
             action(Subject);
         }
 
         public void OrThrow(Exception exception = null)
         {
-            if (Result.HasResult) return;
+            if (Result.HasMatch) return;
 
             throw exception ?? new ArgumentOutOfRangeException();
+        }
+
+        public void OrThrow(Func<Exception> exception)
+        {
+            if (Result.HasMatch) return;
+
+            throw exception() ?? new ArgumentOutOfRangeException();
         }
     }
 }

@@ -54,7 +54,6 @@
   </ItemGroup>
   <ItemGroup>
     <Compile Include="TheEnum.cs" />
-    <Compile Include="TypeSwitchExpression2Tests.cs" />
     <Compile Include="TypeSwitchExpressionTests.cs" />
     <Compile Include="SwitchExpressionTests.cs" />
     <Compile Include="TypeSwitchStatementTests.cs" />

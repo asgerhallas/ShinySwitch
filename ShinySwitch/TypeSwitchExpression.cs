@@ -2,10 +2,9 @@
 
 namespace ShinySwitch
 {
-    public class TypeSwitchExpression<TSubject, TExpression> : SwitchExpression<TSubject, TExpression>
+    public class TypeSwitchExpression<TSubject, TExpression>(TSubject subject, MatchResult<TExpression> result)
+        : SwitchExpression<TSubject, TExpression>(subject, result)
     {
-        public TypeSwitchExpression(TSubject subject, SwitchResult<TExpression> result) : base(subject, result) { }
-
         public TypeSwitchExpression<TSubject, TExpression> Match<T>(Func<T, TExpression> func) => MatchIf(func);
         public TypeSwitchExpression<TSubject, TExpression> Match<T>(T value, Func<T, TExpression> func) => MatchIf(x => Equals(x, value), func);
         public TypeSwitchExpression<TSubject, TExpression> Match<T>(T value, TExpression returnValue) => MatchIf<TSubject>(x => Equals(x, value), _ => returnValue);
@@ -20,23 +19,23 @@ namespace ShinySwitch
         public TypeSwitchExpression<TSubject, TExpression> Match(Func<bool> predicate, Func<TSubject, TExpression> func) => MatchIf(_ => predicate(), func);
 
         public TypeSwitchExpression<TSubject, TNewExpression> Then<TNewExpression>(Func<TExpression, TNewExpression> func) =>
-            Result.HasResult
-                ? new TypeSwitchExpression<TSubject, TNewExpression>(Subject, new SwitchResult<TNewExpression>(func(Result.Result)))
-                : new TypeSwitchExpression<TSubject, TNewExpression>(Subject, new SwitchResult<TNewExpression>());
+            Result.HasMatch
+                ? new TypeSwitchExpression<TSubject, TNewExpression>(Subject, new MatchResult<TNewExpression>(func(Result.Value)))
+                : new TypeSwitchExpression<TSubject, TNewExpression>(Subject, new MatchResult<TNewExpression>());
 
         internal TypeSwitchExpression<TSubject, TExpression> MatchIf<T>(Func<T, bool> predicate, Func<T, TExpression> func) => 
-            !Result.HasResult && Subject is T t && predicate(t)
-                ? new TypeSwitchExpression<TSubject, TExpression>(Subject, new SwitchResult<TExpression>(func(t)))
+            !Result.HasMatch && Subject is T t && predicate(t)
+                ? new TypeSwitchExpression<TSubject, TExpression>(Subject, new MatchResult<TExpression>(func(t)))
                 : this;
 
         internal TypeSwitchExpression<TSubject, TExpression> MatchIfNull(Func<bool> predicate, Func<TExpression> func) =>
-            !Result.HasResult && ReferenceEquals(Subject, null) && predicate()
-                ? new TypeSwitchExpression<TSubject, TExpression>(Subject, new SwitchResult<TExpression>(func()))
+            !Result.HasMatch && ReferenceEquals(Subject, null) && predicate()
+                ? new TypeSwitchExpression<TSubject, TExpression>(Subject, new MatchResult<TExpression>(func()))
                 : this;
 
         internal TypeSwitchExpression<TSubject, TExpression> MatchIf<T>(Func<T, TExpression> func) => 
-            !Result.HasResult && Subject is T t
-                ? new TypeSwitchExpression<TSubject, TExpression>(Subject, new SwitchResult<TExpression>(func(t)))
+            !Result.HasMatch && Subject is T t
+                ? new TypeSwitchExpression<TSubject, TExpression>(Subject, new MatchResult<TExpression>(func(t)))
                 : this;
     }
 }

@@ -5,9 +5,7 @@ namespace ShinySwitch.Tests
 {
     public class TypeSwitchStatementTests
     {
-        string result;
-
-        public TypeSwitchStatementTests() => result = "";
+        string result = "";
 
         [Fact]
         public void MatchPassesSubject()
@@ -71,6 +69,17 @@ namespace ShinySwitch.Tests
                 .Then(x => result += "then");
 
             Assert.Equal("", result);
+        }
+
+        [Fact]
+        public void FallThrough_Instance()
+        {
+            Switch.On(new B(), matchMany: true)
+                .Match<A>(x => result += "A")
+                .Match<B>(x => result += "B")
+                .Match<C>(x => result += "C");
+
+            Assert.Equal("AB", result);
         }
 
         public class A { }

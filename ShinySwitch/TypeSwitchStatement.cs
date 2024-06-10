@@ -2,10 +2,9 @@
 
 namespace ShinySwitch
 {
-    public class TypeSwitchStatement<TSubject> : SwitchStatement<TSubject>
+    public class TypeSwitchStatement<TSubject>(TSubject subject, MatchResult<bool> result, bool matchMany)
+        : SwitchStatement<TSubject>(subject, result, matchMany)
     {
-        public TypeSwitchStatement(TSubject subject, SwitchResult<bool> result) : base(subject, result) { }
-
         public TypeSwitchStatement<TSubject> Match<T>(Action<T> action) => MatchIf(action);
         public TypeSwitchStatement<TSubject> Match<T>(T value, Action<T> action) => Match(x => Equals(x, value), action);
 
@@ -14,7 +13,7 @@ namespace ShinySwitch
 
         public TypeSwitchStatement<TSubject> Then(Action<TSubject> action)
         {
-            if (Result.HasResult)
+            if (Result.HasMatch)
             {
                 action(Subject);
             }
@@ -24,10 +23,10 @@ namespace ShinySwitch
 
         internal TypeSwitchStatement<TSubject> MatchIf<T>(Func<T, bool> predicate, Action<T> action)
         {
-            if (!Result.HasResult && Subject is T t && predicate(t))
+            if ((!Result.HasMatch || MatchMany) && Subject is T t && predicate(t))
             {
                 action(t);
-                return new TypeSwitchStatement<TSubject>(Subject, new SwitchResult<bool>(true));
+                return new TypeSwitchStatement<TSubject>(Subject, new MatchResult<bool>(true), MatchMany);
             }
 
             return this;
@@ -35,10 +34,10 @@ namespace ShinySwitch
 
         internal TypeSwitchStatement<TSubject> MatchIf<T>(Action<T> action)
         {
-            if (!Result.HasResult && Subject is T t)
+            if ((!Result.HasMatch || MatchMany) && Subject is T t)
             {
                 action(t);
-                return new TypeSwitchStatement<TSubject>(Subject, new SwitchResult<bool>(true));
+                return new TypeSwitchStatement<TSubject>(Subject, new MatchResult<bool>(true), MatchMany);
             }
 
             return this;
