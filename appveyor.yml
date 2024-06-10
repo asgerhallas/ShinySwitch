@@ -7,6 +7,15 @@ assembly_info:
   assembly_version: '{version}'
   assembly_file_version: '{version}'
   assembly_informational_version: '{version}'
+install:
+- ps: >-
+    $ErrorActionPreference = "Stop";
+
+    ./versionize.ps1 $env:APPVEYOR_BUILD_NUMBER | %{ Update-AppveyorBuild -Version $_ };
+
+    $env:REPO_TAG_DESCRIPTION = (git tag -l --format='%(contents)' $env:APPVEYOR_REPO_TAG_NAME | Where-Object {$_}) -join "<br />";
+
+    Write-Host $env:REPO_TAG_DESCRIPTION;
 before_build:
 - cmd: dotnet restore
 build:
